@@ -2,68 +2,63 @@
 #include <stdlib.h>
 #include "string.h"
 #include "rpn.h"
+int* token;
+int flag = 0;
 
-int evaluate(char *expression){
-	int i,j;
+void pushOperaion(int *token,char *expression,int i,Stack* st){
+	token = (int*)malloc(sizeof(int));
+	*token = (atoi(expression+i));
+	if(i>0){
+		(expression[i-1]==32) && push(st,(void*)token);
+	}	
+	else
+		push(st,(void*)token);		
+}
+
+int isOperator(char operator){
+	return operator>= 42 && operator<=47;
+}
+
+int performOperation(char expression,void* first_val,void* second_val){
 	int res;
-	char o,p;
+	switch(expression){
+			case 43: res = *(int*)first_val+*(int*)second_val; break;
+		 	case 42: res = *(int*)first_val*(*(int*)second_val); break;
+		 	case 45: res = (*(int*)second_val-*(int*)first_val); break;
+	}
+	return res;	
+}
+
+int popOperation(char expression,Stack* st){
+	int res;
+	void* first_val,*second_val;
+	first_val = pop(st);
+	second_val = pop(st);
+	if((int)first_val==0 || (int)second_val == 0){
+		res=0;
+		flag=1;
+	}
+	else{
+		res = performOperation(expression,first_val,second_val);
+	}
+	return res;	
+}
+
+Result evaluate(char *expression){
+	Result final_res;
+	int i,first_val,second_val,final_value;
 	Stack st = createStack();
-	int* token;  
-
-	for(i=0; i<strlen(expression); i++){
-
+	for(i=0; i<strlen(expression); i=i++){
 		if(expression[i] != 32){
-			if(expression[i] != 43 && expression[i] != 42 && expression[i] != 45 && expression[i] != 47){
-				token = (int*)malloc(sizeof(int));
-				*token = (atoi(expression+i));
-				push(&st,(void*)token);
+			if(isOperator(expression[i])==0){
+				pushOperaion(token,expression,i,&st);
 			}
 			else{
-				o = *(int*)pop(&st);
-				p = *(int*)pop(&st);
-				switch(expression[i]){
-					case 43:
-				 		res = o+p;
-				 		token = &res;
-				 		if(expression[i+1] == 32){
-					 		push(&st,(void*)token);
-				 		}
-				 		else
-				 			return o+p;
-				 		break;
-				 	case 42:
-				 		res = (o*p);
-				 		token = &res;
-				 		if(expression[i+1] == 32){
-					 		push(&st,(void*)token);
-				 		}
-				 		else
-				 			return o*p;
-				 		break;
-
-				 	case 45:
-				 		res = (p-o);
-				 		token = &res;
-				 		if(expression[i+1] == 32){
-					 		push(&st,(void*)token);
-				 		}
-				 		else
-				 			return p-o;
-				 		break;
-			// 	 	case 47:
-			// 	 		o = atoi((char*)pop(&st));
-			// 	 		p = atoi((char*)pop(&st));
-			// 	 		l = p/o;
-			// 	 		token = (int*)&l;
-			// 	 		if(expression[i+1] == 32){
-			// 		 		push(&st,(void*)token);
-			// 	 		}
-			// 	 		else
-			// 	 			return p/o;
-			// 	 		break;
-				 }
+				final_value = popOperation(expression[i],&st);
+				(expression[i+1]==32) && push(&st,(void*)&final_value);
+				final_res = (Result){flag,final_value};
 			}
 		}
 	}
-	return 0;
+	return final_res;
 }

@@ -1,19 +1,14 @@
 #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
-typedef struct sta stack;
-// struct sta {
-// 	int a;
-// };
+#include "stack.h"
 
-int main(int argc, char const *argv[])
-{
-	//int a[] = {50,51};
-	char a = 'v';
-	int b = ascii(a);
-	printf("%d\n",b);
-	// int i ;
-	
-	// int d = atoi((char*)a+0);
-	// int s = atoi((char*)a+4);
-	// printf("%d  %d", d ,s);
+
+int main(int argc, char const *argv[]) {
+	int o = 10;
+	Stack st = createStack();
+	push(&st,(void*)&o);
+	printf("%d",*(int*)st.top->data);
+	return 0;
 }
+
