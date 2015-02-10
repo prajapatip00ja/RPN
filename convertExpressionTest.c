@@ -26,7 +26,6 @@ void test_tostring_method_convert_a_integer_to_string(){
 	char* expected = "1 ";
 	char* str = (char*)malloc(sizeof(char)*20);
 	tostring(str,1);
-	printf("%s",str);
 	assertEqual(strcmp(str,expected),0);
 	free(str);
 }
@@ -53,7 +52,6 @@ void test_infix_to_postfix_method_changing_the_expression_from_infix_to_postfix_
 	char* result;
 	char* expected = "2 3 +";
 	result = infixToPostfix(expression);
-	printf("%s\n",result);
 	assertEqual(strcmp(expected,result),0);
 }
 
@@ -70,7 +68,6 @@ void  test_infix_to_postfix_method_changing_the_expression_from_infix_to_postfix
 	char* result;
 	char* expected = "3 4 5 * + 2 -";
 	result = infixToPostfix(expression);
-	printf("%s",result);
 	assertEqual(strcmp(expected,result),0);
 }
 
@@ -95,7 +92,6 @@ void  test_infix_to_postfix_method_changing_the_expression_from_infix_to_postfix
 	char* result;
 	char* expected = "3 5 - 2 * + ";
 	result = infixToPostfix(expression);
-	printf("%s\n",result);
 	assertEqual(strcmp(expected,result),0);
 }
 

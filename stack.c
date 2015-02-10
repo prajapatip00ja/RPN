@@ -10,7 +10,7 @@ Stack createStack(){
 int push(Stack* st,void* i){
 	node_ptr n = (Node*)calloc(sizeof(Node),1);
 	n->data  = i;
-	printf("++++ push = %c\n",*(char*)n->data);
+	//printf("++++ push = %c\n",*(char*)n->data);
 	if(st->count!=0){
 		n->next = (st->top);
 	}
@@ -36,7 +36,7 @@ void* pop(Stack* st){
 			st->top = st->top->next;
 			st->count--;
 		}
-		printf("pop = %c\n",*(char*)node->data);
+		//printf("pop = %c\n",*(char*)node->data);
 		return node->data;
 	}	
 };

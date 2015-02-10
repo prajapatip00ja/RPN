@@ -25,9 +25,8 @@ int givePrecedence(char operator){
 	operators op[7] ={{'+',2},{'-',2},{'*',3},{'/',3},{'^',4},{'(',10},{')',10}};
 	int i,precedence;
 	for(i = 0; i<7; i++){
-		if(op[i].symbol==operator){
+		if(op[i].symbol==operator)
 			precedence = op[i].precedence;
-		}
 	}
 	return precedence;
 }
@@ -36,9 +35,8 @@ int isOperator(char operator){
 	char operators[] = {'+','-','*','/','(',')','^'};
 	int i,flag = 0;
 	for(i=0;i<=6;i++){
-		if(operator==operators[i]){
+		if(operator==operators[i])
 			flag = 1;
-		}
 	}
 	return flag;
 }
@@ -56,10 +54,8 @@ int insertInQueue(linkedList_ptr list,char* expression,int i){
 	int* token = (int*)malloc(sizeof(int));
 	node_ptr node = create_node((void*)token);
 	*token = (atoi(expression+i));
-	if(i>0){
-	if(expression[i-1]==' ')
-		add_to_list(list,node);
-	}
+	if(i>0)
+		(expression[i-1]==' ') && add_to_list(list,node);
 	else
 	add_to_list(list,node);
 	return 0;
@@ -88,11 +84,14 @@ void popAndInsertInQueue(Stack* st,linkedList_ptr list){
 }
 
 void handlePanthesis(Stack* st,linkedList_ptr list){
-	void* token = pop(st);
-	node_ptr node = create_node(token);
-	add_to_list(list,node);
+	void* token;
+	node_ptr node ;
+	while(*(char*)st->top->next->data=='('){
+		token = pop(st);
+		node = create_node(token);
+		add_to_list(list,node);
+	}	
 	pop(st);
-		
 };
 
 void makeResult(char* result,int* i,node_ptr walker,int length){
@@ -113,7 +112,6 @@ void makeResult(char* result,int* i,node_ptr walker,int length){
 
 char* makeResultExpression(linkedList_ptr list,char* expression){
 	int len1 = strlen(expression);
-	int len2;
 	char* result = malloc(len1);
 	int i = 0,number;
 	node_ptr walker = list->head;
@@ -145,9 +143,8 @@ void checkPrecedenceAndPush(Stack* st,void* operator,int count,linkedList_ptr li
 int handleOperators(char* expression,int i,Stack* st,linkedList_ptr list,int count){
 	if(expression[i]==')')
 		handlePanthesis(st,list);
-	else{
+	else
 		checkPrecedenceAndPush(st, (expression+i),count,list);
-	}
 	return 0;
 }
 
@@ -157,7 +154,7 @@ char* infixToPostfix(char* expression){
 	LinkedList list = createList();
 	for (i = 0; i < strlen(expression);i++){
 		isdigit(expression[i]) && insertInQueue(&list,expression,i);
-		
+
 		if(isOperator(expression[i])==1){
 			handleOperators(expression,i,&st,&list,count);
 			count++;
