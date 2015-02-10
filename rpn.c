@@ -19,27 +19,30 @@ int isOperator(char operator){
 	return operator>= 42 && operator<=47;
 }
 
-int performOperation(char expression,void* first_val,void* second_val){
-	int res;
-	switch(expression){
-			case 43: res = *(int*)first_val+*(int*)second_val; break;
-		 	case 42: res = *(int*)first_val*(*(int*)second_val); break;
-		 	case 45: res = (*(int*)second_val-*(int*)first_val); break;
+int performOperation(char* expression,int i,void* first_val,void* second_val,Stack* st){
+	int *res = malloc(sizeof(int));
+	switch(expression[i]){
+			case 43: *res = *(int*)first_val+*(int*)second_val; break;
+		 	case 42: *res = *(int*)first_val*(*(int*)second_val); break;
+		 	case 45: *res = (*(int*)second_val-*(int*)first_val); break;
 	}
-	return res;	
+	if(expression[i+1]==32){
+	 push(st,res);
+	} 
+	return *res;
+	
 }
 
-int popOperation(char expression,Stack* st){
-	int res;
+Result popAndSetResult(char* expression,int i,Stack* st){
+	Result res;
 	void* first_val,*second_val;
 	first_val = pop(st);
 	second_val = pop(st);
 	if((int)first_val==0 || (int)second_val == 0){
-		res=0;
-		flag=1;
+		res = (Result){1,0};
 	}
 	else{
-		res = performOperation(expression,first_val,second_val);
+		res.status = performOperation(expression,i,first_val,second_val,st);
 	}
 	return res;	
 }
@@ -54,9 +57,7 @@ Result evaluate(char *expression){
 				pushOperaion(token,expression,i,&st);
 			}
 			else{
-				final_value = popOperation(expression[i],&st);
-				(expression[i+1]==32) && push(&st,(void*)&final_value);
-				final_res = (Result){flag,final_value};
+				final_res = popAndSetResult(expression,i,&st);
 			}
 		}
 	}
